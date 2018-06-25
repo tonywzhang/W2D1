@@ -11,30 +11,47 @@ end
 # PHASE 3
 FRUITS = ["apple", "banana", "orange"]
 
+class CoffeeError < StandardError
+  def message
+    "Hey! That's not coffee! Try again!"
+  end
+end
+
+class FruitError < StandardError
+  def message
+    "That's not a fruit I know. Try again, but give me coffee first."
+  end
+end
+
 def reaction(maybe_fruit)
   if FRUITS.include? maybe_fruit
     puts "OMG, thanks so much for the #{maybe_fruit}!"
-  else
-    puts "That's not a fruit I know. Try again, but give me coffee first."
-    print "Coffee, pretty please: "
-    maybe_coffee = gets.chomp
-    feed_me_a_fruit if maybe_coffee == "coffee"
+    return true
   end
+  false
 end
 
 
 def feed_me_a_fruit
-
-    puts "Hello, I am a friendly monster. :)"
-
+  puts "Hello, I am a friendly monster. :)"
+  begin
     puts "Feed me a fruit! (Enter the name of a fruit:)"
     maybe_fruit = gets.chomp
-    reaction(maybe_fruit)
-#   rescue StandardError
-#     puts "That's not a fruit I know. Try again, but give me coffee first."
-#   retry
-# end
-end
+    first_response = reaction(maybe_fruit)
+    raise FruitError.new unless first_response
+    rescue FruitError => e
+      puts e.message
+      begin
+        print "Coffee, pretty please: "
+        maybe_coffee = gets.chomp
+        raise CoffeeError.new unless maybe_coffee == "coffee"
+        rescue CoffeeError => e
+          puts e.message
+          retry
+        end
+      retry
+    end
+  end
 
 class AgeError < ArgumentError
 
