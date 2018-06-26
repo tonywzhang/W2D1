@@ -1,19 +1,5 @@
 module SlidingPiece
-  HORIZONTAL_DIRS = [:left, :right, :up, :down]
-  DIAGONAL_DIRS = [:northwest, :northeast, :southwest, :southeast]
 
-  HORIZONTAL_MOVES = {
-    left: [0, -1],
-    right: [0, 1],
-    up: [-1, 0],
-    down: [1, 0]
-  }
-  DIAGONAL_MOVES = {
-    northwest: [-1,-1],
-    northeast: [1, -1],
-    southwest: [-1, 1],
-    southeast: [1,1]
-  }
 
   def horizontal_dirs
     HORIZONTAL_DIRS
@@ -25,7 +11,9 @@ module SlidingPiece
 
   def moves
     result = []
-    move_dirs.each {|dir| result += grow_unblocked_moves_in_dir(dir[0],dir[1])}
+    move_dirs.each do |(dx,dy)|
+      result += grow_unblocked_moves_in_dir(dx,dy)
+    end
     result
   end
 
@@ -35,16 +23,30 @@ module SlidingPiece
   end
 
   def grow_unblocked_moves_in_dir(dx,dy)
-    result = []
+    newpos = [pos[0] + dx, pos[1] + dy]
 
+    result = []
+    while board.valid_pos?(newpos)
+      result << newpos
+      newpos = [newpos[0] + dx, [newpos[1] + dy]]
+    end
     result
   end
+
+  HORIZONTAL_DIRS = [[0, -1], [0, 1], [-1, 0], [1, 0]]
+  DIAGONAL_DIRS = [[-1,-1], [1, -1], [-1, 1], [1,1]]
+
 end
 
 module SteppingPiece
 
   def moves
-
+    result = []
+    move_diffs.each do |(dx,dy)|
+      newpos = [pos[0] + dx, pos[1] + dy]
+      result << newpos if board.valid_pos?(newpos)
+    end
+    result
   end
 
   private
@@ -99,7 +101,7 @@ class Rook < Piece
 
   protected
   def move_dirs
-    HORIZONTAL_DIRS
+    horizontal_dirs
   end
 
 end
@@ -113,7 +115,7 @@ class Bishop < Piece
 
   protected
   def move_dirs
-    DIAGONAL_DIRS
+    diagonal_dirs
   end
 end
 
@@ -126,7 +128,7 @@ class Queen < Piece
 
   protected
   def move_dirs
-    DIAGONAL_DIRS + HORIZONTAL_DIRS
+    diagonal_dirs + horizontal_dirs
   end
 end
 
@@ -138,7 +140,7 @@ class Knight < Piece
 
   protected
   def move_diffs
-
+    [[2, 1], [2, -1], [1, 2], [1, -2], [-1,2], [-1, -2], [-2, 1], [-2,-1]]
   end
 end
 
@@ -150,7 +152,7 @@ class King < Piece
 
   protected
   def move_diffs
-
+    [[0, -1], [0, 1], [-1, 0], [1, 0], [-1,-1], [1, -1], [-1, 1], [1,1]]
   end
 
 end
@@ -161,12 +163,12 @@ class Pawn < Piece
   end
 
   def move_dirs
-
+    forward_steps + side_attacks
   end
 
   private
   def at_start_row?
-
+    (@color == black && pos[0] == 1) || (@color == white && pos[0]==6)
   end
 
   def forward_dir
@@ -174,11 +176,13 @@ class Pawn < Piece
   end
 
   def forward_steps
-
+    return [1,0] if @color == black
+    return [-1,0] if @color == white
   end
 
   def side_attacks
-
+    return [[1,-1],[1,1]] if @color == black
+    return [[-1,1],[-1,-1]] if @color == white
   end
 end
 

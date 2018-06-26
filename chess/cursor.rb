@@ -89,7 +89,7 @@ class Cursor
 
   def update_pos(diff)
     new_row, new_col = @cursor_pos[0] + diff[0], @cursor_pos[1] + diff[1]
-    if Board.valid_pos?([new_row, new_col])
+    if board.valid_pos?([new_row, new_col])
       @cursor_pos[0] = new_row
       @cursor_pos[1] = new_col
     end
