@@ -40,7 +40,7 @@ def move_piece(start_pos, end_pos)
   self[start_pos] = NullPiece.new
 end
 
-def valid_pos?(pos)
+def self.valid_pos?(pos)
   if pos.any? {|el| el > 7 || el < 0}
     return false
   end

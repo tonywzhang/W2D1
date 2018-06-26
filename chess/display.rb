@@ -11,11 +11,13 @@ class Display
   end
 
   def render
+    system "clear"
+
     puts "________________________________"
     @board.board.each_with_index do |row,row_idx|
       (0...8).each do |col_idx|
         if row_idx == @cursor.cursor_pos[0] && col_idx == @cursor.cursor_pos[1]
-          print "| #{@board.board[row_idx][col_idx].to_s.colorize(:red)} "
+          print "| #{@board.board[row_idx][col_idx].to_s.colorize(:background => :yellow, :color => :red)} "
         else
           print "| #{@board.board[row_idx][col_idx].to_s} "
         end
@@ -26,7 +28,7 @@ class Display
   end
 
   def move_cursor
-    5.times do
+    loop do
       @cursor.get_input
       render
     end
