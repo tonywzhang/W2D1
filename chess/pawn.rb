@@ -1,6 +1,8 @@
+require_relative "piece"
+
 class Pawn < Piece
   def symbol
-    @color == black ? ♟ : ♙
+    @color == :black ? "♟" : "♙"
   end
 
   def move_dirs
@@ -9,7 +11,7 @@ class Pawn < Piece
 
   private
   def at_start_row?
-    (@color == black && pos[0] == 1) || (@color == white && pos[0]==6)
+    (@color == :black && pos[0] == 1) || (@color == :white && pos[0]==6)
   end
 
   def forward_dir
@@ -17,12 +19,12 @@ class Pawn < Piece
   end
 
   def forward_steps
-    return [1,0] if @color == black
-    return [-1,0] if @color == white
+    return [1,0] if @color == :black
+    return [-1,0] if @color == :white
   end
 
   def side_attacks
-    return [[1,-1],[1,1]] if @color == black
-    return [[-1,1],[-1,-1]] if @color == white
+    return [[1,-1],[1,1]] if @color == :black
+    return [[-1,1],[-1,-1]] if @color == :white
   end
 end

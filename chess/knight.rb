@@ -1,4 +1,6 @@
 require_relative "stepping_piece"
+require_relative "piece"
+
 
 class Knight < Piece
   include SteppingPiece

@@ -1,10 +1,11 @@
 require_relative "sliding_piece"
+require_relative "piece"
 
 class Rook < Piece
   include SlidingPiece
 
   def symbol
-    @color == black ? ♖ : ♜
+    @color == :black ? ♖ : ♜
   end
 
   protected

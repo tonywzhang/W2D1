@@ -1,4 +1,13 @@
 require_relative "piece"
+require_relative "sliding_piece"
+require_relative "stepping_piece"
+require_relative "rook"
+require_relative "queen"
+require_relative "bishop"
+require_relative "knight"
+require_relative "king"
+require_relative "pawn"
+require_relative "null_piece"
 
 class Board
 
@@ -14,9 +23,10 @@ def initialize
   @board.each_with_index do |row, row_idx|
     row.each_index do |col|
       if ROWS.include?(row_idx)
-        @board[row_idx][col] = Piece.new
+
+        @board[row_idx][col] = Pawn.new(:black, @board, [row_idx, col])
       else
-        @board[row_idx][col] = NullPiece.new
+        @board[row_idx][col] = NullPiece.instance
       end
     end
   end
